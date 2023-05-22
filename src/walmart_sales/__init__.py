@@ -1,1 +1,1 @@
-"""Forecasting Walmart sales"""
+"""Forecasting Walmart sales."""

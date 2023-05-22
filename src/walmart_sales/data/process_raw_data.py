@@ -8,7 +8,7 @@ import pandas as pd
 
 
 @click.command()
-def process_raw_data():
+def process_raw_data() -> None:
     """Read raw data, merge, and save the result."""
     with zipfile.ZipFile(
         "data/raw/walmart-recruiting-sales-in-stormy-weather.zip", "r"
@@ -21,9 +21,9 @@ def process_raw_data():
     df_merged = df_train.merge(df_key).merge(df_weather)
     click.echo("Removing items with zero sales...")
     df_processed = df_merged[
-        df_merged.groupby(["item_nbr", "store_nbr"], as_index=False)["units"].transform(
-            "sum"
-        )
+        df_merged.groupby(["item_nbr", "store_nbr"], as_index=False)[
+            "units"
+        ].transform("sum")
         != 0
     ]
     df_processed.to_csv("data/processed/df_full.csv")

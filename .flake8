@@ -1,0 +1,6 @@
+[flake8]
+application-import-names = walmart_sales
+docstring-convention = google
+ignore = W503,E203
+import-order-style = google
+max-complexity = 10
