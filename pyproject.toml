@@ -6,8 +6,16 @@ authors = ["astraszab <uladzislau_astrashab@epam.com>"]
 readme = "README.md"
 packages = [{include = "walmart_sales", from = "src"}]
 
+[tool.poetry.scripts]
+process-raw-data = "walmart_sales.data.process_raw_data:process_raw_data"
+
 [tool.poetry.dependencies]
 python = "^3.9"
+jupyterlab = "^4.0.0"
+pandas = "^2.0.1"
+matplotlib = "^3.7.1"
+click = "^8.1.3"
+black = "^23.3.0"
 
 
 [build-system]
