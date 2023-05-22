@@ -1,0 +1,15 @@
+[tool.poetry]
+name = "walmart-sales"
+version = "0.1.0"
+description = "Forecasting Walmart sales"
+authors = ["astraszab <uladzislau_astrashab@epam.com>"]
+readme = "README.md"
+packages = [{include = "walmart_sales", from = "src"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
