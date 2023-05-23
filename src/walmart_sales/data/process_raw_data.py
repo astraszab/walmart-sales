@@ -29,7 +29,7 @@ def process_raw_data() -> None:
     click.echo("Merging tables...")
     df_merged = df_train.merge(df_stores).merge(df_features)
     processed_dataset_path = Path(PROCESSED_DATA_DIR, PROCESSED_DATA_FILE)
-    df_merged.to_csv(processed_dataset_path)
+    df_merged.to_csv(processed_dataset_path, index=False)
     click.secho(f"Extracted raw archive to {INTERIM_DATA_DIR}", fg="green")
     click.secho(
         f"Saved merged data to {processed_dataset_path}",
