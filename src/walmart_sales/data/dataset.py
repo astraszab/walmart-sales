@@ -38,6 +38,9 @@ class WalmartDataset:
         data_pivoted = self._extract_ts_feature(
             data, prefix="lag", target=True
         )
+        data_pivoted["targeted_week"] = data_pivoted[
+            "forecast_week"
+        ] + pd.to_timedelta(data_pivoted.horizon, unit="W")
         return data_pivoted
 
     def _extract_ts_feature(
@@ -67,9 +70,7 @@ class WalmartDataset:
                         ),
                     ),
                 ]
-                df_target.columns = [
-                    str(i) for i in range(1, len(df_target.columns) + 1)
-                ]
+                df_target.columns = range(1, len(df_target.columns) + 1)
                 df_target = df_target.stack().reset_index()
                 df_target.columns = list(df_target.columns[:-2]) + [
                     "horizon",
