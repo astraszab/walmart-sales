@@ -1,3 +1,3 @@
-poetry run black src
-poetry run mypy src
-poetry run flake8 src
+poetry run black src tests
+poetry run mypy src tests
+poetry run flake8 src tests
