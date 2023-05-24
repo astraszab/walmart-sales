@@ -4,6 +4,11 @@
 from pathlib import Path
 
 
+# Task specific parameters
+FEATURES_WINDOW = 12
+HORIZON = 4
+
+# Data paths
 RAW_DATA_DIR = Path("data/raw")
 INTERIM_DATA_DIR = Path("data/interim")
 PROCESSED_DATA_DIR = Path("data/processed")
