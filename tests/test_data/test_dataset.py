@@ -26,7 +26,7 @@ def test_forecast_week(
 ) -> None:
     """lag_1 feature has sales of the last known week before forecast."""
     assert (
-        walmart_dataset.df_full.query(
+        walmart_dataset.full.query(
             "Store == 1 and Dept == 1 and forecast_week == '2010-04-23'"
         )["lag_1"]
         == df_processed.query(
@@ -40,7 +40,7 @@ def test_past_weeks(
 ) -> None:
     """lag_i feature has sales of the i-th week before forecast."""
     assert (
-        walmart_dataset.df_full.query(
+        walmart_dataset.full.query(
             "Store == 1 and Dept == 1 and forecast_week == '2010-04-23'"
         )["lag_4"]
         == df_processed.query(
@@ -52,7 +52,7 @@ def test_past_weeks(
 def test_targeted_week(walmart_dataset: WalmartDataset) -> None:
     """targeted_week is forecast_week + horizon."""
     assert (
-        walmart_dataset.df_full.targeted_week
-        == walmart_dataset.df_full.forecast_week
-        + pd.to_timedelta(walmart_dataset.df_full.horizon, unit="W")
+        walmart_dataset.full.targeted_week
+        == walmart_dataset.full.forecast_week
+        + pd.to_timedelta(walmart_dataset.full.horizon, unit="W")
     ).all()

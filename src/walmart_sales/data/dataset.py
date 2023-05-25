@@ -1,10 +1,17 @@
 """Walmart weekly sales dataset."""
 
 
+from typing import List, Tuple
+
 import pandas as pd
 
-from walmart_sales.constants import FEATURES_WINDOW, HORIZON
-from walmart_sales.utils import get_week_diff
+from walmart_sales.constants import (
+    FEATURES_WINDOW,
+    HORIZON,
+    TEST_WEEKS,
+    VAL_WEEKS,
+)
+from walmart_sales.utils import add_weeks, get_week_diff
 
 
 class WalmartDataset:
@@ -15,6 +22,8 @@ class WalmartDataset:
         data: pd.DataFrame,
         features_window: int = FEATURES_WINDOW,
         horizon: int = HORIZON,
+        val_weeks: int = VAL_WEEKS,
+        test_weeks: int = TEST_WEEKS,
     ):
         """Initialize a dataset.
 
@@ -24,10 +33,65 @@ class WalmartDataset:
             features_window: number of weeks prior to forecast that can
                 be used to extract features.
             horizon: number of weeks to forecast.
+            val_weeks: number of validation 1-week folds.
+            test_weeks: number of test 1-week folds.
         """
-        self.features_window = features_window
-        self.horizon = horizon
-        self.df_full = self._prepare_data(data)
+        self._features_window = features_window
+        self._horizon = horizon
+        self._val_weeks = val_weeks
+        self._test_weeks = test_weeks
+        self._df_full = self._prepare_data(data)
+
+    @property
+    def full(self) -> pd.DataFrame:
+        """Get full dataset.
+
+        Returns:
+            full dataset.
+        """
+        return self._df_full.copy()
+
+    @property
+    def test_ts_split(self) -> List[Tuple[pd.DataFrame, pd.DataFrame]]:
+        """Get test folds.
+
+        Returns:
+            A list of (train_df, test_df) tuples.
+        """
+        test_folds = []
+        max_week = self._df_full.forecast_week.max()
+        for i in range(0, self._test_weeks):
+            forecast_week = add_weeks(max_week, -i)
+            test_folds.append(
+                (
+                    self._df_full[self._df_full.forecast_week < forecast_week],
+                    self._df_full[
+                        self._df_full.forecast_week == forecast_week
+                    ],
+                )
+            )
+        return test_folds
+
+    @property
+    def val_ts_split(self) -> List[Tuple[pd.DataFrame, pd.DataFrame]]:
+        """Get validation folds.
+
+        Returns:
+            A list of (train_df, val_df) tuples.
+        """
+        test_folds = []
+        max_week = self._df_full.forecast_week.max()
+        for i in range(self._test_weeks, self._test_weeks + self._val_weeks):
+            forecast_week = add_weeks(max_week, -i)
+            test_folds.append(
+                (
+                    self._df_full[self._df_full.forecast_week < forecast_week],
+                    self._df_full[
+                        self._df_full.forecast_week == forecast_week
+                    ],
+                )
+            )
+        return test_folds
 
     def _prepare_data(self, data: pd.DataFrame) -> pd.DataFrame:
         data = data[
@@ -50,22 +114,22 @@ class WalmartDataset:
             index=["Store", "Dept"], columns="Date", values=["Weekly_Sales"]
         )
         partial_dfs = []
-        for shift in range(0, df_pivot.shape[1] - self.features_window):
+        for shift in range(0, df_pivot.shape[1] - self._features_window):
             df_features = df_pivot.iloc[
-                :, range(shift, shift + self.features_window)
+                :, range(shift, shift + self._features_window)
             ]
             forecast_week = df_features.columns[-1][1]
             df_features.columns = [
-                f"{prefix}_{i}" for i in range(self.features_window, 0, -1)
+                f"{prefix}_{i}" for i in range(self._features_window, 0, -1)
             ]
             df_features = df_features.reset_index()
             if target:
                 df_target = df_pivot.iloc[
                     :,
                     range(
-                        shift + self.features_window,
+                        shift + self._features_window,
                         min(
-                            shift + self.features_window + self.horizon,
+                            shift + self._features_window + self._horizon,
                             df_pivot.shape[1],
                         ),
                     ),

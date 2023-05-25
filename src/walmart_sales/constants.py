@@ -8,6 +8,10 @@ from pathlib import Path
 FEATURES_WINDOW = 12
 HORIZON = 4
 
+# Validation and test
+TEST_WEEKS = 12
+VAL_WEEKS = 12
+
 # Data paths
 RAW_DATA_DIR = Path("data/raw")
 INTERIM_DATA_DIR = Path("data/interim")
