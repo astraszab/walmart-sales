@@ -40,6 +40,7 @@ class WalmartDataTransformer:
     ) -> Tuple[pd.DataFrame, Optional["pd.Series[Any]"]]:
         lags = [f"lag_{i}" for i in range(self._features_window, 0, -1)]
         X = df[lags].fillna(0)
+        X["horizon"] = df["horizon"]
         if is_train:
             y = df["target"]
         else:
