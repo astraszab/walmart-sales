@@ -14,6 +14,17 @@ VAL_WEEKS = 12
 
 # Features
 FEATURES_KNOWN_IN_ADVANCE = ["IsHoliday"]
+FEATURES_LAGS = [
+    "Temperature",
+    "Fuel_Price",
+    "CPI",
+    "Unemployment",
+    "MarkDown1",
+    "MarkDown2",
+    "MarkDown3",
+    "MarkDown4",
+    "MarkDown5",
+]
 FEATURES_STATIONARY = ["Type", "Size"]
 
 # Data paths

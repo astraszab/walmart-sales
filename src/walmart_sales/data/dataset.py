@@ -7,6 +7,7 @@ import pandas as pd
 
 from walmart_sales.constants import (
     FEATURES_KNOWN_IN_ADVANCE,
+    FEATURES_LAGS,
     FEATURES_STATIONARY,
     FEATURES_WINDOW,
     HORIZON,
@@ -102,7 +103,7 @@ class WalmartDataset:
             )
         ]
         data_pivoted = self._extract_ts_feature(
-            data, prefix="lag", target=True
+            data, feature="Weekly_Sales", prefix="lag", target=True
         )
         data_pivoted["targeted_week"] = data_pivoted[
             "forecast_week"
@@ -119,20 +120,25 @@ class WalmartDataset:
             left_on=["Store", "Dept", "forecast_week"],
             right_on=["Store", "Dept", "Date"],
         ).drop("Date", axis=1)
+        for feature in FEATURES_LAGS:
+            df_feature = self._extract_ts_feature(
+                data, feature=feature, prefix=f"{feature}_lag", target=False
+            )
+            data_pivoted = data_pivoted.merge(df_feature)
         return data_pivoted
 
     def _extract_ts_feature(
-        self, data: pd.DataFrame, prefix: str, target: bool
+        self, data: pd.DataFrame, feature: str, prefix: str, target: bool
     ) -> pd.DataFrame:
         df_pivot = data.pivot(
-            index=["Store", "Dept"], columns="Date", values=["Weekly_Sales"]
+            index=["Store", "Dept"], columns="Date", values=feature
         )
         partial_dfs = []
         for shift in range(0, df_pivot.shape[1] - self._features_window):
             df_features = df_pivot.iloc[
                 :, range(shift, shift + self._features_window)
             ]
-            forecast_week = df_features.columns[-1][1]
+            forecast_week = df_features.columns[-1]
             df_features.columns = [
                 f"{prefix}_{i}" for i in range(self._features_window, 0, -1)
             ]
