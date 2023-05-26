@@ -61,6 +61,8 @@ class WalmartDataTransformer:
         X["unemployment_delta"] = (
             df["Unemployment_lag_2"] - df["Unemployment_lag_1"]
         )
+        for i in range(1, 6, 1):
+            X[f"markdown{i}_lag_1"] = df[f"MarkDown{i}_lag_1"].fillna(0)
         if is_train:
             y = df["target"]
         else:
