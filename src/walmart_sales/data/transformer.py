@@ -45,6 +45,12 @@ class WalmartDataTransformer:
         X["store_type_A"] = df["Type"] == "A"
         X["store_type_B"] = df["Type"] == "B"
         X["is_holiday"] = df["IsHoliday"]
+        X["targeted_week_number"] = (
+            df["targeted_week"].dt.isocalendar().week.astype(int)
+        )
+        X["forecast_week_number"] = (
+            df["forecast_week"].dt.isocalendar().week.astype(int)
+        )
         if is_train:
             y = df["target"]
         else:
