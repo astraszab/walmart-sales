@@ -13,6 +13,7 @@ TEST_WEEKS = 12
 VAL_WEEKS = 12
 
 # Features
+FEATURES_KNOWN_IN_ADVANCE = ["IsHoliday"]
 FEATURES_STATIONARY = ["Type", "Size"]
 
 # Data paths

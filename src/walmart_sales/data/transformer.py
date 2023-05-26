@@ -44,6 +44,7 @@ class WalmartDataTransformer:
         X["store_size"] = df["Size"]
         X["store_type_A"] = df["Type"] == "A"
         X["store_type_B"] = df["Type"] == "B"
+        X["is_holiday"] = df["IsHoliday"]
         if is_train:
             y = df["target"]
         else:
