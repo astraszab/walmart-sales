@@ -51,6 +51,16 @@ class WalmartDataTransformer:
         X["forecast_week_number"] = (
             df["forecast_week"].dt.isocalendar().week.astype(int)
         )
+        deltas = X[lags].diff(axis=1).iloc[:, 1:]
+        X[[f"delta_{i}" for i in range(deltas.shape[1], 0, -1)]] = deltas
+        X["temperature_delta"] = (
+            df["Temperature_lag_2"] - df["Temperature_lag_1"]
+        )
+        X["fuel_price_delta"] = df["Fuel_Price_lag_2"] - df["Fuel_Price_lag_1"]
+        X["cpi_delta"] = df["CPI_lag_2"] - df["CPI_lag_1"]
+        X["unemployment_delta"] = (
+            df["Unemployment_lag_2"] - df["Unemployment_lag_1"]
+        )
         if is_train:
             y = df["target"]
         else:
