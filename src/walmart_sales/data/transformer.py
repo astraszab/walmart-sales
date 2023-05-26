@@ -41,6 +41,9 @@ class WalmartDataTransformer:
         lags = [f"lag_{i}" for i in range(self._features_window, 0, -1)]
         X = df[lags].fillna(0)
         X["horizon"] = df["horizon"]
+        X["store_size"] = df["Size"]
+        X["store_type_A"] = df["Type"] == "A"
+        X["store_type_B"] = df["Type"] == "B"
         if is_train:
             y = df["target"]
         else:

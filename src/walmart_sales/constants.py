@@ -12,6 +12,9 @@ HORIZON = 4
 TEST_WEEKS = 12
 VAL_WEEKS = 12
 
+# Features
+FEATURES_STATIONARY = ["Type", "Size"]
+
 # Data paths
 RAW_DATA_DIR = Path("data/raw")
 INTERIM_DATA_DIR = Path("data/interim")

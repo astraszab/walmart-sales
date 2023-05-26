@@ -6,6 +6,7 @@ from typing import List, Tuple
 import pandas as pd
 
 from walmart_sales.constants import (
+    FEATURES_STATIONARY,
     FEATURES_WINDOW,
     HORIZON,
     TEST_WEEKS,
@@ -105,6 +106,12 @@ class WalmartDataset:
         data_pivoted["targeted_week"] = data_pivoted[
             "forecast_week"
         ] + pd.to_timedelta(data_pivoted.horizon, unit="W")
+        data_pivoted = data_pivoted.merge(
+            data[FEATURES_STATIONARY + ["Store", "Dept", "Date"]],
+            how="left",
+            left_on=["Store", "Dept", "forecast_week"],
+            right_on=["Store", "Dept", "Date"],
+        )
         return data_pivoted
 
     def _extract_ts_feature(
