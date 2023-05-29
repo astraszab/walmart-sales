@@ -35,7 +35,7 @@ I chose SMAPE to measure quality for several reasons:
 
 ## Modelling
 - Baseline model is forecasting with a sales value of the last available week. It can be found in ```notebooks/baseline.ipynb```.
-- Also I tried a boosting model, which is in ```notebooks/boosting.ipynb```.
+- Also I tried a boosting model (LGBMRegressor), which is in ```notebooks/boosting.ipynb```.
 
 
 ## Code quality and testing
